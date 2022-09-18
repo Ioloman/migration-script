@@ -19,9 +19,15 @@ func Main() {
 						Aliases: []string{"b"},
 						Value:   1000,
 					},
+					&cli.IntFlag{
+						Name:    "print-every",
+						Aliases: []string{"p"},
+						Value:   10,
+						Usage:   "how often to print the stats",
+					},
 				},
 				Action: func(ctx *cli.Context) error {
-					return single.Migrate(ctx.Int("batch-size"))
+					return single.Migrate(ctx.Int("batch-size"), ctx.Int("print-every"))
 				},
 			},
 		},
