@@ -29,3 +29,15 @@ func DeleteLogs(logs *[]models.PaymentLog) error {
 	}
 	return nil
 }
+
+func GetPaymentIDs(n int, id uint64) *[]uint64 {
+	paymentIDs := []uint64{}
+
+	DB.Select(
+		&paymentIDs,
+		"SELECT DISTINCT payment_id FROM processing.payment_log WHERE payment_id IS NOT NULL AND payment_id > ? LIMIT ?",
+		id, n,
+	)
+
+	return &paymentIDs
+}
