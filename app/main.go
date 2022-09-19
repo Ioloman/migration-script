@@ -3,8 +3,8 @@ package app
 import (
 	"os"
 
-	"github.com/Ioloman/migration-script/app/script/single"
 	"github.com/Ioloman/migration-script/app/script/parallel"
+	"github.com/Ioloman/migration-script/app/script/single"
 	"github.com/urfave/cli/v2"
 )
 
@@ -39,10 +39,11 @@ func Main() {
 				},
 				Flags: []cli.Flag{
 					&cli.IntFlag{
-                        Name:    "workers",
-                        Aliases: []string{"w"},
-                        Value:   5,
-                        Usage:   "how many concurrent workers to use",
+						Name:    "workers",
+						Aliases: []string{"w"},
+						Value:   5,
+						Usage:   "how many concurrent workers to use",
+					},
 				},
 			},
 		},

@@ -9,7 +9,7 @@ func worker(inputCh <-chan *[]uint64, outputCh chan<- *[]uint64) {
 
 }
 
-func Migrate(batchSize int, numWorkers int, printEvery int) {
+func Migrate(batchSize int, numWorkers int, printEvery int) error {
 	var failedPayments *[]uint64
 	globalTiming := &models.Timings{}
 	inputCh := make(chan *[]uint64, numWorkers)
