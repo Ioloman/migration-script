@@ -13,7 +13,7 @@ func Migrate(batchSize int, printEvery int) error {
 	log.Println("starting single migration")
 	globalTiming := &models.Timings{}
 	for {
-		localTiming := &models.Timings{}
+		localTiming := &models.Timings{Count: 1}
 		t := time.Now()
 
 		logs, err := mysql.GetFirstLogs(batchSize)
@@ -44,7 +44,7 @@ func Migrate(batchSize int, printEvery int) error {
 			}
 		}
 		log.Println("deleted logs")
-		t = localTiming.SetDelete(t)
+		localTiming.SetDelete(t)
 
 		globalTiming.Add(localTiming)
 		if globalTiming.Count%uint64(printEvery) == 0 {

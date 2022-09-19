@@ -30,14 +30,29 @@ func DeleteLogs(logs *[]models.PaymentLog) error {
 	return nil
 }
 
-func GetPaymentIDs(n int, id uint64) *[]uint64 {
+func GetPaymentIDs(n int, id uint64) (*[]uint64, error) {
 	paymentIDs := []uint64{}
 
-	DB.Select(
+	err := DB.Select(
 		&paymentIDs,
 		"SELECT DISTINCT payment_id FROM processing.payment_log WHERE payment_id IS NOT NULL AND payment_id > ? LIMIT ?",
 		id, n,
 	)
+	if err != nil {
+		return nil, err
+	}
 
-	return &paymentIDs
+	return &paymentIDs, nil
+}
+
+func GetLogs(paymentIDs *[]uint64) (*[]models.PaymentLog, error) {
+	logs := []models.PaymentLog{}
+
+	query, args, err := sqlx.In("SELECT payment_id, text, date FROM processing.payment_log WHERE payment_id IN (?)", *paymentIDs)
+	if err != nil {
+		return nil, err
+	}
+	query = DB.Rebind(query)
+	err = DB.Select(&logs, query, args...)
+	return &logs, err
 }

@@ -51,6 +51,12 @@ func (t *Timings) SetSelect(ct time.Time) time.Time {
 	return now
 }
 
+func (t *Timings) AddSelect(ct time.Time) time.Time {
+	now := time.Now()
+	t.Select += ct.UnixMilli() - now.UnixMilli()
+	return now
+}
+
 func (t *Timings) SetInsert(ct time.Time) time.Time {
 	now := time.Now()
 	t.Insert = ct.UnixMilli() - now.UnixMilli()
