@@ -16,7 +16,7 @@ func SetupDB() {
 	log.Printf("Connecting to %s", uri)
 	DB = sqlx.MustConnect("mysql", uri)
 	DB.SetConnMaxLifetime(time.Minute * 3)
-	DB.SetMaxOpenConns(30)
-	DB.SetMaxIdleConns(30)
+	DB.SetMaxOpenConns(100)
+	DB.SetMaxIdleConns(100)
 	log.Println("Connected to mysql")
 }
