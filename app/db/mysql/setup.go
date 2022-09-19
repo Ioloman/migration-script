@@ -12,7 +12,7 @@ import (
 var DB *sqlx.DB
 
 func SetupDB() {
-	uri := os.Getenv("DB_URI")
+	uri := os.Getenv("MYSQL_URI")
 	log.Printf("Connecting to %s", uri)
 	DB = sqlx.MustConnect("mysql", uri)
 	DB.SetConnMaxLifetime(time.Minute * 3)
