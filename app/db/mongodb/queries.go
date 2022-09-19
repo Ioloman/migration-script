@@ -3,9 +3,10 @@ package mongodb
 import "github.com/Ioloman/migration-script/app/models"
 
 func InsertLogs(logs *[]models.PaymentLog) error {
-	insertLogs := make([]interface{}, len(*logs))
-	for i, log := range *logs {
-		insertLogs[i] = log
+	logsVal := *logs
+	insertLogs := make([]interface{}, len(logsVal))
+	for i := range logsVal {
+		insertLogs[i] = logsVal[i]
 	}
 
 	_, err := Collection.InsertMany(CTX, insertLogs)
