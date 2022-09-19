@@ -11,7 +11,7 @@ import (
 
 func Migrate(batchSize int, printEvery int) error {
 	log.Println("starting single migration")
-	globalTiming := &models.Timings{}
+	globalTiming := &models.Timings{NumWorkers: 1}
 	paymentID := uint64(0)
 	for {
 		localTiming := &models.Timings{Count: 1}

@@ -53,7 +53,7 @@ func worker(inputCh <-chan *[]uint64, outputCh chan<- models.WorkerReturn) {
 
 func Migrate(batchSize int, numWorkers int, printEvery int) error {
 	var returnBuffer models.WorkerReturn
-	globalTiming := &models.Timings{}
+	globalTiming := &models.Timings{NumWorkers: uint64(numWorkers)}
 	inputCh := make(chan *[]uint64, numWorkers)
 	outputCh := make(chan models.WorkerReturn, numWorkers)
 	paymentID := uint64(0)

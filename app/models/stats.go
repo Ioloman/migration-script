@@ -11,6 +11,7 @@ type Timings struct {
 	Delete     int64
 	Count      uint64
 	LogsAmount uint64
+	NumWorkers uint64
 }
 
 func (t *Timings) Total() int64 {
@@ -34,7 +35,7 @@ func (t *Timings) String() string {
 	if t.Count > 1 {
 		return fmt.Sprintf(
 			"Amount: %v; Total: %v s, %v s/op, %v op/s; Select: %v s, %v s/op, %v op/s; Insert: %v s, %v s/op, %v op/s; Delete: %v s, %v s/op, %v op/s",
-			t.LogsAmount, total, total/c, c/total,
+			t.LogsAmount, total/float64(t.NumWorkers), total/c, c/total,
 			s, s/c, c/s,
 			i, i/c, c/i,
 			d, d/c, c/d,
