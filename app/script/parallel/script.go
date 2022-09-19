@@ -38,9 +38,9 @@ func worker(inputCh <-chan *[]uint64, outputCh chan<- models.WorkerReturn) {
 		}
 		t = localTiming.SetInsert(t)
 
-		err = mysql.DeleteLogs(logs)
+		err = mysql.DeleteLogs(paymentIDs)
 		if err != nil {
-			for ; err != nil; err = mysql.DeleteLogs(logs) {
+			for ; err != nil; err = mysql.DeleteLogs(paymentIDs) {
 				log.Fatalf("Cannot delete logs: %v", err)
 			}
 		}

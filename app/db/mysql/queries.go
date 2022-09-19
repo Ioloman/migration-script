@@ -12,13 +12,8 @@ func GetFirstLogs(n int) (*[]models.PaymentLog, error) {
 	return &logs, err
 }
 
-func DeleteLogs(logs *[]models.PaymentLog) error {
-	logIDs := make([]uint64, len(*logs))
-	for i, log := range *logs {
-		logIDs[i] = log.PaymentId
-	}
-
-	query, args, err := sqlx.In("DELETE FROM processing.payment_log WHERE payment_id in (?)", logIDs)
+func DeleteLogs(paymentIDs *[]uint64) error {
+	query, args, err := sqlx.In("DELETE FROM processing.payment_log WHERE payment_id in (?)", *paymentIDs)
 	if err != nil {
 		return err
 	}

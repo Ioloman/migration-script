@@ -12,13 +12,19 @@ import (
 func Migrate(batchSize int, printEvery int) error {
 	log.Println("starting single migration")
 	globalTiming := &models.Timings{}
+	paymentID := uint64(0)
 	for {
 		localTiming := &models.Timings{Count: 1}
 		t := time.Now()
 
-		logs, err := mysql.GetFirstLogs(batchSize)
+		paymentIDs, err := mysql.GetPaymentIDs(batchSize, paymentID)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("Error querying payment_ids: %v", err)
+			continue
+		}
+		logs, err := mysql.GetLogs(paymentIDs)
+		if err != nil || len(*logs) == 0 {
+			log.Fatalf("error or 0 payment_ids: %v", err)
 			continue
 		}
 		log.Println("got logs")
@@ -37,9 +43,9 @@ func Migrate(batchSize int, printEvery int) error {
 		log.Println("inserted logs")
 		t = localTiming.SetInsert(t)
 
-		err = mysql.DeleteLogs(logs)
+		err = mysql.DeleteLogs(paymentIDs)
 		if err != nil {
-			for ; err != nil; err = mysql.DeleteLogs(logs) {
+			for ; err != nil; err = mysql.DeleteLogs(paymentIDs) {
 				log.Fatalf("Cannot delete logs: %v", err)
 			}
 		}
