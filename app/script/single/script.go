@@ -22,6 +22,7 @@ func Migrate(batchSize int, printEvery int) error {
 			log.Fatalf("Error querying payment_ids: %v", err)
 			continue
 		}
+		log.Printf("got payment_ids: %v", *paymentIDs)
 		logs, err := mysql.GetLogs(paymentIDs)
 		if err != nil || len(*logs) == 0 {
 			log.Fatalf("error or 0 payment_ids: %v", err)
