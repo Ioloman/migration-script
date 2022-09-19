@@ -93,7 +93,6 @@ func Migrate(batchSize int, numWorkers int, printEvery int) error {
 		if globalTiming.Count%uint64(printEvery) == 0 && globalTiming.Count != lastCount {
 			lastCount = globalTiming.Count
 			log.Printf("globalTiming: %v\n", globalTiming)
-			log.Printf("DB Stats: %+v\n", mysql.DB.Stats())
 		}
 	}
 }
