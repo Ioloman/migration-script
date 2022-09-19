@@ -16,7 +16,6 @@ func worker(inputCh <-chan *[]uint64, outputCh chan<- models.WorkerReturn) {
 
 		paymentIDs := <-inputCh
 		result.PaymentIDs = paymentIDs
-		localTiming.LogsAmount = uint64(len(*paymentIDs))
 		
 		t := time.Now()
 
@@ -29,6 +28,7 @@ func worker(inputCh <-chan *[]uint64, outputCh chan<- models.WorkerReturn) {
 		if len(*logs) == 0 {
 			continue
 		}
+		localTiming.LogsAmount = uint64(len(*logs))
 		t = localTiming.SetSelect(t)
 
 		err = mongodb.InsertLogs(logs)

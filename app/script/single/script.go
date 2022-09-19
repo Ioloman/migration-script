@@ -22,7 +22,6 @@ func Migrate(batchSize int, printEvery int) error {
 			log.Fatalf("Error querying payment_ids: %v", err)
 			continue
 		}
-		localTiming.LogsAmount = uint64(len(*paymentIDs))
 		logs, err := mysql.GetLogs(paymentIDs)
 		if err != nil || len(*logs) == 0 {
 			log.Fatalf("error or 0 payment_ids: %v", err)
@@ -33,6 +32,7 @@ func Migrate(batchSize int, printEvery int) error {
 			time.Sleep(time.Second * 5)
 			continue
 		}
+		localTiming.LogsAmount = uint64(len(*logs))
 		t = localTiming.SetSelect(t)
 
 		err = mongodb.InsertLogs(logs)
