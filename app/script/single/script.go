@@ -27,7 +27,6 @@ func Migrate(batchSize int, printEvery int) error {
 			log.Fatalf("error or 0 payment_ids: %v", err)
 			continue
 		}
-		log.Println("got logs")
 		if len(*logs) == 0 {
 			log.Println("0 logs")
 			time.Sleep(time.Second * 5)
@@ -40,7 +39,6 @@ func Migrate(batchSize int, printEvery int) error {
 			log.Fatal(err)
 			continue
 		}
-		log.Println("inserted logs")
 		t = localTiming.SetInsert(t)
 
 		err = mysql.DeleteLogs(paymentIDs)
@@ -49,7 +47,6 @@ func Migrate(batchSize int, printEvery int) error {
 				log.Fatalf("Cannot delete logs: %v", err)
 			}
 		}
-		log.Println("deleted logs")
 		localTiming.SetDelete(t)
 
 		globalTiming.Add(localTiming)
