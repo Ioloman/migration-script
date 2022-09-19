@@ -47,24 +47,24 @@ func (t *Timings) String() string {
 
 func (t *Timings) SetSelect(ct time.Time) time.Time {
 	now := time.Now()
-	t.Select = ct.UnixMilli() - now.UnixMilli()
+	t.Select = now.UnixMilli() - ct.UnixMilli()
 	return now
 }
 
 func (t *Timings) AddSelect(ct time.Time) time.Time {
 	now := time.Now()
-	t.Select += ct.UnixMilli() - now.UnixMilli()
+	t.Select += now.UnixMilli() - ct.UnixMilli()
 	return now
 }
 
 func (t *Timings) SetInsert(ct time.Time) time.Time {
 	now := time.Now()
-	t.Insert = ct.UnixMilli() - now.UnixMilli()
+	t.Insert = now.UnixMilli() - ct.UnixMilli()
 	return now
 }
 
 func (t *Timings) SetDelete(ct time.Time) time.Time {
 	now := time.Now()
-	t.Delete = ct.UnixMilli() - now.UnixMilli()
+	t.Delete = now.UnixMilli() - ct.UnixMilli()
 	return now
 }
