@@ -33,6 +33,7 @@ func Migrate(batchSize int, printEvery int) error {
 			continue
 		}
 		localTiming.LogsAmount = uint64(len(*logs))
+		paymentID = (*paymentIDs)[len(*paymentIDs)-1]
 		t = localTiming.SetSelect(t)
 
 		err = mongodb.InsertLogs(logs)
