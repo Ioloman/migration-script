@@ -8,7 +8,7 @@ import (
 func GetFirstLogs(n int) (*[]models.PaymentLog, error) {
 	logs := []models.PaymentLog{}
 
-	err := DB.Select(&logs, "SELECT payment_id, text, date FROM processing.payment_log LIMIT ?", n)
+	err := DB.Select(&logs, "SELECT payment_id, text, date FROM processing.payment_log WHERE payment_id IS NOT NULL AND payment_id != 0 LIMIT ?", n)
 	return &logs, err
 }
 
