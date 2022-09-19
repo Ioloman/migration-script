@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/Ioloman/migration-script/app/db/mysql"
 	"github.com/Ioloman/migration-script/app/db/mongodb"
+	"github.com/Ioloman/migration-script/app/db/mysql"
 	"github.com/Ioloman/migration-script/app/models"
 )
 
@@ -16,7 +16,7 @@ func worker(inputCh <-chan *[]uint64, outputCh chan<- models.WorkerReturn) {
 
 		paymentIDs := <-inputCh
 		result.PaymentIDs = paymentIDs
-		
+
 		t := time.Now()
 
 		logs, err := mysql.GetLogs(paymentIDs)
@@ -57,6 +57,7 @@ func Migrate(batchSize int, numWorkers int, printEvery int) error {
 	inputCh := make(chan *[]uint64, numWorkers)
 	outputCh := make(chan models.WorkerReturn, numWorkers)
 	paymentID := uint64(0)
+	lastCount := uint64(0)
 
 	for i := 0; i < numWorkers; i++ {
 		go worker(inputCh, outputCh)
@@ -89,8 +90,10 @@ func Migrate(batchSize int, numWorkers int, printEvery int) error {
 			}
 		}
 
-		if globalTiming.Count%uint64(printEvery) == 0 {
+		if globalTiming.Count%uint64(printEvery) == 0 && globalTiming.Count != lastCount {
+			lastCount = globalTiming.Count
 			log.Printf("globalTiming: %v\n", globalTiming)
+			log.Printf("DB Stats: %v\n", mysql.DB.Stats())
 		}
 	}
 }
