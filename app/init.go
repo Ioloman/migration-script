@@ -19,7 +19,7 @@ func getLogFile(name string) *os.File {
 	return file
 }
 
-func init() {
+func Init() {
 	// read .env
 	log.Println("Loading environment variables")
 	err := godotenv.Load(".env")

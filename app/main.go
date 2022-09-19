@@ -28,6 +28,7 @@ func Main() {
 				Name:  "single",
 				Usage: "sync execution",
 				Action: func(ctx *cli.Context) error {
+					Init()
 					return single.Migrate(ctx.Int("batch-size"), ctx.Int("print-every"))
 				},
 			},
@@ -35,6 +36,7 @@ func Main() {
 				Name:  "parallel",
 				Usage: "async execution",
 				Action: func(ctx *cli.Context) error {
+					Init()
 					return parallel.Migrate(ctx.Int("batch-size"), ctx.Int("workers"), ctx.Int("print-every"))
 				},
 				Flags: []cli.Flag{
