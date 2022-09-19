@@ -16,6 +16,7 @@ func worker(inputCh <-chan *[]uint64, outputCh chan<- models.WorkerReturn) {
 
 		paymentIDs := <-inputCh
 		result.PaymentIDs = paymentIDs
+		localTiming.LogsAmount = uint64(len(*paymentIDs))
 		
 		t := time.Now()
 

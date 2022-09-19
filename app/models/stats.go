@@ -6,10 +6,11 @@ import (
 )
 
 type Timings struct {
-	Select int64
-	Insert int64
-	Delete int64
-	Count  uint64
+	Select     int64
+	Insert     int64
+	Delete     int64
+	Count      uint64
+	LogsAmount uint64
 }
 
 func (t *Timings) Total() int64 {
@@ -21,6 +22,7 @@ func (t *Timings) Add(newT *Timings) {
 	t.Insert += newT.Insert
 	t.Delete += newT.Delete
 	t.Count += newT.Count
+	t.LogsAmount += newT.LogsAmount
 }
 
 func (t *Timings) String() string {
@@ -31,16 +33,16 @@ func (t *Timings) String() string {
 	c := float64(t.Count)
 	if t.Count > 1 {
 		return fmt.Sprintf(
-			"Total: %v s, %v s/op, %v op/s; Select: %v s, %v s/op, %v op/s; Insert: %v s, %v s/op, %v op/s; Delete: %v s, %v s/op, %v op/s",
-			total, total/c, c/total,
+			"Amount: %v; Total: %v s, %v s/op, %v op/s; Select: %v s, %v s/op, %v op/s; Insert: %v s, %v s/op, %v op/s; Delete: %v s, %v s/op, %v op/s",
+			t.LogsAmount, total, total/c, c/total,
 			s, s/c, c/s,
 			i, i/c, c/i,
 			d, d/c, c/d,
 		)
 	} else {
 		return fmt.Sprintf(
-			"Total: %v s; Select: %v s; Insert: %v s; Delete: %v s",
-			total, s, i, d,
+			"Amount: %v; Total: %v s; Select: %v s; Insert: %v s; Delete: %v s",
+			t.LogsAmount, total, s, i, d,
 		)
 	}
 }
