@@ -72,6 +72,7 @@ func Migrate(batchSize int, numWorkers int, printEvery int, database string) err
 		}
 		if len(*paymentIDs) == 0 {
 			log.Println("Got 0 logs")
+			paymentID = 1
 			time.Sleep(time.Second * 5)
 			continue
 		}

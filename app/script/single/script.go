@@ -12,7 +12,7 @@ import (
 func Migrate(batchSize int, printEvery int, database string) error {
 	log.Println("starting single migration")
 	globalTiming := &models.Timings{NumWorkers: 1}
-	paymentID := uint64(0)
+	paymentID := uint64(1)
 	for {
 		localTiming := &models.Timings{Count: 1}
 		t := time.Now()
@@ -29,6 +29,7 @@ func Migrate(batchSize int, printEvery int, database string) error {
 		}
 		if len(*logs) == 0 {
 			log.Println("0 logs")
+			paymentID = 1
 			time.Sleep(time.Second * 5)
 			continue
 		}
