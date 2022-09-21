@@ -56,7 +56,7 @@ func Migrate(batchSize int, numWorkers int, printEvery int, database string) err
 	globalTiming := &models.Timings{NumWorkers: uint64(numWorkers)}
 	inputCh := make(chan *[]uint64, numWorkers)
 	outputCh := make(chan models.WorkerReturn, numWorkers)
-	paymentID := uint64(0)
+	paymentID := uint64(1)
 	lastCount := uint64(0)
 
 	for i := 0; i < numWorkers; i++ {
