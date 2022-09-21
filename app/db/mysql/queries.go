@@ -1,19 +1,15 @@
 package mysql
 
 import (
+	"fmt"
+
 	"github.com/Ioloman/migration-script/app/models"
 	"github.com/jmoiron/sqlx"
 )
 
-func GetFirstLogs(n int) (*[]models.PaymentLog, error) {
-	logs := []models.PaymentLog{}
 
-	err := DB.Select(&logs, "SELECT payment_id, text, date FROM processing.payment_log WHERE payment_id IS NOT NULL AND payment_id != 0 LIMIT ?", n)
-	return &logs, err
-}
-
-func DeleteLogs(paymentIDs *[]uint64) error {
-	query, args, err := sqlx.In("DELETE FROM processing.payment_log WHERE payment_id in (?)", *paymentIDs)
+func DeleteLogs(paymentIDs *[]uint64, database string) error {
+	query, args, err := sqlx.In(fmt.Sprintf("DELETE FROM %v WHERE payment_id in (?)", database), *paymentIDs)
 	if err != nil {
 		return err
 	}
@@ -25,12 +21,12 @@ func DeleteLogs(paymentIDs *[]uint64) error {
 	return nil
 }
 
-func GetPaymentIDs(n int, id uint64) (*[]uint64, error) {
+func GetPaymentIDs(n int, id uint64, database string) (*[]uint64, error) {
 	paymentIDs := []uint64{}
 
 	err := DB.Select(
 		&paymentIDs,
-		"SELECT DISTINCT payment_id FROM processing.payment_log WHERE payment_id IS NOT NULL AND payment_id > ? LIMIT ?",
+		fmt.Sprintf("SELECT DISTINCT payment_id FROM %v WHERE payment_id IS NOT NULL AND payment_id > ? LIMIT ?", database),
 		id, n,
 	)
 	if err != nil {
@@ -40,10 +36,10 @@ func GetPaymentIDs(n int, id uint64) (*[]uint64, error) {
 	return &paymentIDs, nil
 }
 
-func GetLogs(paymentIDs *[]uint64) (*[]models.PaymentLog, error) {
+func GetLogs(paymentIDs *[]uint64, database string) (*[]models.PaymentLog, error) {
 	logs := []models.PaymentLog{}
 
-	query, args, err := sqlx.In("SELECT payment_id, text, date FROM processing.payment_log WHERE payment_id IN (?)", *paymentIDs)
+	query, args, err := sqlx.In(fmt.Sprintf("SELECT payment_id, text, date FROM %v WHERE payment_id IN (?)", database), *paymentIDs)
 	if err != nil {
 		return nil, err
 	}

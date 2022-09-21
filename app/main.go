@@ -22,6 +22,12 @@ func Main() {
 				Value:   10,
 				Usage:   "how often to print the stats",
 			},
+			&cli.StringFlag{
+				Name:    "database",
+				Aliases: []string{"d"},
+				Value:   "processing.payment_log",
+				Usage:   "mysql database to use",
+			},
 		},
 		Commands: []*cli.Command{
 			{
@@ -29,7 +35,7 @@ func Main() {
 				Usage: "sync execution",
 				Action: func(ctx *cli.Context) error {
 					Init()
-					return single.Migrate(ctx.Int("batch-size"), ctx.Int("print-every"))
+					return single.Migrate(ctx.Int("batch-size"), ctx.Int("print-every"), ctx.String("database"))
 				},
 			},
 			{
@@ -37,7 +43,7 @@ func Main() {
 				Usage: "async execution",
 				Action: func(ctx *cli.Context) error {
 					Init()
-					return parallel.Migrate(ctx.Int("batch-size"), ctx.Int("workers"), ctx.Int("print-every"))
+					return parallel.Migrate(ctx.Int("batch-size"), ctx.Int("workers"), ctx.Int("print-every"), ctx.String("database"))
 				},
 				Flags: []cli.Flag{
 					&cli.IntFlag{

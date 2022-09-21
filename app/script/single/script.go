@@ -9,7 +9,7 @@ import (
 	"github.com/Ioloman/migration-script/app/models"
 )
 
-func Migrate(batchSize int, printEvery int) error {
+func Migrate(batchSize int, printEvery int, database string) error {
 	log.Println("starting single migration")
 	globalTiming := &models.Timings{NumWorkers: 1}
 	paymentID := uint64(0)
@@ -17,12 +17,12 @@ func Migrate(batchSize int, printEvery int) error {
 		localTiming := &models.Timings{Count: 1}
 		t := time.Now()
 
-		paymentIDs, err := mysql.GetPaymentIDs(batchSize, paymentID)
+		paymentIDs, err := mysql.GetPaymentIDs(batchSize, paymentID, database)
 		if err != nil {
 			log.Fatalf("Error querying payment_ids: %v", err)
 			continue
 		}
-		logs, err := mysql.GetLogs(paymentIDs)
+		logs, err := mysql.GetLogs(paymentIDs, database)
 		if err != nil || len(*logs) == 0 {
 			log.Fatalf("error or 0 payment_ids: %v", err)
 			continue
@@ -43,9 +43,9 @@ func Migrate(batchSize int, printEvery int) error {
 		}
 		t = localTiming.SetInsert(t)
 
-		err = mysql.DeleteLogs(paymentIDs)
+		err = mysql.DeleteLogs(paymentIDs, database)
 		if err != nil {
-			for ; err != nil; err = mysql.DeleteLogs(paymentIDs) {
+			for ; err != nil; err = mysql.DeleteLogs(paymentIDs, database) {
 				log.Fatalf("Cannot delete logs: %v", err)
 			}
 		}
