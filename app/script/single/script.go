@@ -12,12 +12,11 @@ import (
 func Migrate(batchSize int, printEvery int, database string) error {
 	log.Println("starting single migration")
 	globalTiming := &models.Timings{NumWorkers: 1}
-	paymentID := uint64(1)
 	for {
 		localTiming := &models.Timings{Count: 1}
 		t := time.Now()
 
-		paymentIDs, err := mysql.GetPaymentIDs(batchSize, paymentID, database)
+		paymentIDs, err := mysql.GetPaymentIDs(batchSize, database)
 		if err != nil {
 			log.Fatalf("Error querying payment_ids: %v", err)
 			continue
@@ -29,12 +28,10 @@ func Migrate(batchSize int, printEvery int, database string) error {
 		}
 		if len(*logs) == 0 {
 			log.Println("0 logs")
-			paymentID = 1
 			time.Sleep(time.Second * 5)
 			continue
 		}
 		localTiming.LogsAmount = uint64(len(*logs))
-		paymentID = (*paymentIDs)[len(*paymentIDs)-1]
 		t = localTiming.SetSelect(t)
 
 		err = mongodb.InsertLogs(logs)
@@ -56,8 +53,6 @@ func Migrate(batchSize int, printEvery int, database string) error {
 		if globalTiming.Count%uint64(printEvery) == 0 {
 			log.Printf("localTiming: %v\n", localTiming)
 			log.Printf("globalTiming: %v\n", globalTiming)
-			log.Printf("first payment_ids: %v", (*paymentIDs)[0:10])
-			log.Printf("min payment_id: %v\n", paymentID)
 		}
 	}
 }

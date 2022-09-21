@@ -20,13 +20,13 @@ func DeleteLogs(paymentIDs *[]uint64, database string) error {
 	return nil
 }
 
-func GetPaymentIDs(n int, id uint64, database string) (*[]uint64, error) {
+func GetPaymentIDs(n int, database string) (*[]uint64, error) {
 	paymentIDs := []uint64{}
 
 	err := DB.Select(
 		&paymentIDs,
-		fmt.Sprintf("SELECT DISTINCT payment_id FROM %v WHERE payment_id IS NOT NULL AND payment_id >= ? ORDER BY payment_id ASC LIMIT ?", database),
-		id, n,
+		fmt.Sprintf("SELECT DISTINCT payment_id FROM %v WHERE payment_id IS NOT NULL AND payment_id > 0 ORDER BY payment_id ASC LIMIT ?", database),
+		n,
 	)
 	if err != nil {
 		return nil, err

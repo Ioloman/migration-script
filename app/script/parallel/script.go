@@ -56,7 +56,6 @@ func Migrate(batchSize int, numWorkers int, printEvery int, database string) err
 	globalTiming := &models.Timings{NumWorkers: uint64(numWorkers)}
 	inputCh := make(chan *[]uint64, numWorkers)
 	outputCh := make(chan models.WorkerReturn, numWorkers)
-	paymentID := uint64(1)
 	lastCount := uint64(0)
 
 	for i := 0; i < numWorkers; i++ {
@@ -65,19 +64,17 @@ func Migrate(batchSize int, numWorkers int, printEvery int, database string) err
 
 	for {
 		t := time.Now()
-		paymentIDs, err := mysql.GetPaymentIDs(batchSize, paymentID, database)
+		paymentIDs, err := mysql.GetPaymentIDs(batchSize, database)
 		if err != nil {
 			log.Fatalf("Error querying payment_ids: %v", err)
 			continue
 		}
 		if len(*paymentIDs) == 0 {
 			log.Println("Got 0 logs")
-			paymentID = 1
 			time.Sleep(time.Second * 5)
 			continue
 		}
 		globalTiming.AddSelect(t)
-		paymentID = (*paymentIDs)[len(*paymentIDs)-1]
 
 		select {
 		case inputCh <- paymentIDs:
@@ -95,7 +92,6 @@ func Migrate(batchSize int, numWorkers int, printEvery int, database string) err
 			lastCount = globalTiming.Count
 			log.Printf("globalTiming: %v\n", globalTiming)
 			log.Printf("first payment_ids: %v", (*paymentIDs)[0:10])
-			log.Printf("min payment_id: %v\n", paymentID)
 		}
 	}
 }
