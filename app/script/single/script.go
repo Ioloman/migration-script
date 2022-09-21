@@ -55,6 +55,8 @@ func Migrate(batchSize int, printEvery int, database string) error {
 		if globalTiming.Count%uint64(printEvery) == 0 {
 			log.Printf("localTiming: %v\n", localTiming)
 			log.Printf("globalTiming: %v\n", globalTiming)
+			log.Printf("first payment_ids: %v", (*paymentIDs)[0:10])
+			log.Printf("min payment_id: %v\n", paymentID)
 		}
 	}
 }
