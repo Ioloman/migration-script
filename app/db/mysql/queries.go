@@ -7,7 +7,6 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-
 func DeleteLogs(paymentIDs *[]uint64, database string) error {
 	query, args, err := sqlx.In(fmt.Sprintf("DELETE FROM %v WHERE payment_id in (?)", database), *paymentIDs)
 	if err != nil {
@@ -26,7 +25,7 @@ func GetPaymentIDs(n int, id uint64, database string) (*[]uint64, error) {
 
 	err := DB.Select(
 		&paymentIDs,
-		fmt.Sprintf("SELECT DISTINCT payment_id FROM %v WHERE payment_id IS NOT NULL AND payment_id > ? order by payment_id LIMIT ?", database),
+		fmt.Sprintf("SELECT DISTINCT payment_id FROM %v WHERE payment_id IS NOT NULL AND payment_id > ? ORDER BY payment_id ASC LIMIT ?", database),
 		id, n,
 	)
 	if err != nil {
