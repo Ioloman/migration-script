@@ -26,7 +26,7 @@ func GetPaymentIDs(n int, id uint64, database string) (*[]uint64, error) {
 
 	err := DB.Select(
 		&paymentIDs,
-		fmt.Sprintf("SELECT DISTINCT payment_id FROM %v WHERE payment_id IS NOT NULL AND payment_id > ? LIMIT ?", database),
+		fmt.Sprintf("SELECT DISTINCT payment_id FROM %v WHERE payment_id IS NOT NULL AND payment_id > ? order by payment_id LIMIT ?", database),
 		id, n,
 	)
 	if err != nil {
