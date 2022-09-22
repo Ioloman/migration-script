@@ -9,7 +9,7 @@ import (
 	"github.com/Ioloman/migration-script/app/models"
 )
 
-func worker(inputCh <-chan *[]uint64, outputCh chan<- models.WorkerReturn, database string) {
+func worker(inputCh <-chan *[]uint32, outputCh chan<- models.WorkerReturn, database string) {
 	for {
 		localTiming := &models.Timings{Count: 1}
 		result := models.WorkerReturn{Stats: localTiming}
@@ -54,7 +54,7 @@ func worker(inputCh <-chan *[]uint64, outputCh chan<- models.WorkerReturn, datab
 func Migrate(batchSize int, numWorkers int, printEvery int, database string) error {
 	var returnBuffer models.WorkerReturn
 	globalTiming := &models.Timings{NumWorkers: uint64(numWorkers)}
-	inputCh := make(chan *[]uint64, numWorkers)
+	inputCh := make(chan *[]uint32, numWorkers)
 	outputCh := make(chan models.WorkerReturn, numWorkers)
 	lastCount := uint64(0)
 

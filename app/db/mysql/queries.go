@@ -7,7 +7,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func DeleteLogs(paymentIDs *[]uint64, database string) error {
+func DeleteLogs(paymentIDs *[]uint32, database string) error {
 	query, args, err := sqlx.In(fmt.Sprintf("DELETE FROM %v WHERE payment_id in (?)", database), *paymentIDs)
 	if err != nil {
 		return err
@@ -20,8 +20,8 @@ func DeleteLogs(paymentIDs *[]uint64, database string) error {
 	return nil
 }
 
-func GetPaymentIDs(n int, database string) (*[]uint64, error) {
-	paymentIDs := []uint64{}
+func GetPaymentIDs(n int, database string) (*[]uint32, error) {
+	paymentIDs := []uint32{}
 
 	err := DB.Select(
 		&paymentIDs,
@@ -35,7 +35,7 @@ func GetPaymentIDs(n int, database string) (*[]uint64, error) {
 	return &paymentIDs, nil
 }
 
-func GetLogs(paymentIDs *[]uint64, database string) (*[]models.PaymentLog, error) {
+func GetLogs(paymentIDs *[]uint32, database string) (*[]models.PaymentLog, error) {
 	logs := []models.PaymentLog{}
 
 	query, args, err := sqlx.In(fmt.Sprintf("SELECT payment_id, text, date FROM %v WHERE payment_id IN (?)", database), *paymentIDs)
